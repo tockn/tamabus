@@ -15,7 +15,7 @@ type DBConfig struct {
 	Datasource string `yaml:"datasource"`
 }
 
-func (c *Config) Open() (*sqlx.DB, error) {
+func (c *DBConfig) Open() (*sqlx.DB, error) {
 	return sqlx.Open("mysql", c.Datasource)
 }
 
@@ -33,7 +33,7 @@ func NewDBConfigs(r io.Reader) (DBConfigs, error) {
 	if err != nil {
 		return nil, err
 	}
-	var configs Configs
+	var configs DBConfigs
 	if err = yaml.Unmarshal(b, &configs); err != nil {
 		return nil, err
 	}

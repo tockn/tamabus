@@ -2,6 +2,7 @@ package server
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -15,12 +16,12 @@ type Server struct {
 
 func NewServer() *Server {
 	return &Server{
-		Engine: gin.Default(),
+		engine: gin.Default(),
 	}
 }
 
 func Setup(s *Server, dbConfPath, env string) error {
-	s.Engine.Use(cors.New(cors.Config{
+	s.engine.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:8080", "http://localhost:3000"},
 		AllowCredentials: true,
 		AllowHeaders:     []string{"Origin", "X-Requested-With", "Content-Type", "Accept"},
@@ -29,18 +30,18 @@ func Setup(s *Server, dbConfPath, env string) error {
 
 	dbconf, err := NewDBConfigsFromFile(dbConfPath)
 	if err != nil {
-		return errors.New("connot open database. %s", err)
+		return errors.New(fmt.Sprintf("connot open database. %s", err))
 	}
 
-	dbx, err := dbconf.Open(env)
+	dbx, err := dbconf[env].Open()
 	if err != nil {
-		return errors.New("db init failed. %s", err)
+		return errors.New(fmt.Sprintf("db init failed. %s", err))
 	}
 
 	s.dbx = dbx
-
+	return nil
 }
 
 func (s *Server) Run(port string) {
-	s.Engine.Run(":" + port)
+	s.engine.Run(":" + port)
 }
