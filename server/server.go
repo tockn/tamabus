@@ -25,7 +25,7 @@ func Setup(s *Server, dbConfPath, env string) error {
 		AllowOrigins:     []string{"http://localhost:8080", "http://localhost:3000"},
 		AllowCredentials: true,
 		AllowHeaders:     []string{"Origin", "X-Requested-With", "Content-Type", "Accept"},
-		AllowMethods:     []string{"PUT", "DELETE"},
+		AllowMethods:     []string{"POST", "PUT", "DELETE"},
 	}))
 
 	dbconf, err := NewDBConfigsFromFile(dbConfPath)
