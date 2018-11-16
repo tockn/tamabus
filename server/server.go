@@ -4,8 +4,11 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/tockn/tamabus/controllers"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -20,7 +23,7 @@ func NewServer() *Server {
 	}
 }
 
-func Setup(s *Server, dbConfPath, env string) error {
+func (s *Server) Setup(dbConfPath, env string) error {
 	s.engine.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:8080", "http://localhost:3000"},
 		AllowCredentials: true,
@@ -39,7 +42,15 @@ func Setup(s *Server, dbConfPath, env string) error {
 	}
 
 	s.dbx = dbx
+
+	s.setRouter()
+
 	return nil
+}
+
+func (s *Server) setRouter() {
+	busController := controllers.BusController{s.dbx}
+	s.engine.GET("/api/bus", busController.GetBuses)
 }
 
 func (s *Server) Run(port string) {
