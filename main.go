@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"log"
 
 	"github.com/tockn/tamabus/server"
 )
@@ -16,7 +17,9 @@ func main() {
 	flag.Parse()
 
 	s := server.NewServer()
-	server.Setup(s, "dbconfig.yml", env)
+	if err := s.Setup("dbconfig.yml", env); err != nil {
+		log.Fatalf("server setup error. %s", err)
+	}
 	s.Run(port)
 
 }
