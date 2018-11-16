@@ -1,10 +1,12 @@
 package models
 
 type Bus struct {
-	BusID      int `json:"bus_id"`
-	Position   int `json:"position"`
-	Congestion int `json:"congestion"`
-	Direction  int `json:"direction"`
+	BusID      int   `json:"bus_id"`
+	Position   int   `json:"position"`
+	Congestion int   `json:"congestion"`
+	Direction  int   `json:"direction"`
+	Longitude  float `json:"longitude"`
+	Latitude   float `json:"latitude"`
 }
 
 func GetAll() ([]Bus, error) {
