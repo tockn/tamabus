@@ -51,6 +51,7 @@ func (s *Server) Setup(dbConfPath, env string) error {
 func (s *Server) setRouter() {
 	busController := controllers.BusController{s.dbx}
 	s.engine.GET("/api/bus", busController.GetBuses)
+	s.engine.POST("/api/bus/:id", busController.PostGPS)
 }
 
 func (s *Server) Run(port string) {
