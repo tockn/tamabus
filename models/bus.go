@@ -65,5 +65,5 @@ func UpdatePosByID(id int64, bus Bus) (Bus, error) {
 }
 
 func calcPosition(long float64, lati float64) int64 {
-
+	return 1
 }
