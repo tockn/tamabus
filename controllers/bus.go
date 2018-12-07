@@ -14,7 +14,7 @@ type BusController struct {
 }
 
 func (controller *BusController) GetBuses(c *gin.Context) {
-	buses, err := models.GetAll()
+	buses, err := models.GetAll(controller.DB)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "internal server error")
 		return
