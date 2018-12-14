@@ -24,9 +24,9 @@ func GetAll(db *sqlx.DB) ([]*domain.Bus, error) {
 		return nil, err
 	}
 	var logs []*CongestionLog
-	for id := range ids {
-		var log *CongestionLog
-		err := db.Get(&log, `
+	for _, id := range ids {
+		var lo []*CongestionLog
+		err := db.Select(&lo, `
 			SELECT
 				id, latitude, longitude, congestion, bus_id
 			FROM
@@ -40,7 +40,10 @@ func GetAll(db *sqlx.DB) ([]*domain.Bus, error) {
 		if err != nil {
 			return nil, err
 		}
-		logs = append(logs, log)
+		if len(lo) == 0 {
+			continue
+		}
+		logs = append(logs, lo[0])
 	}
 
 	bs := make([]*domain.Bus, len(logs))
