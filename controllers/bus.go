@@ -3,6 +3,8 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/tockn/tamabus/domain"
+
 	"github.com/jmoiron/sqlx"
 
 	"github.com/gin-gonic/gin"
@@ -30,11 +32,11 @@ func (controller *BusController) PostGPS(c *gin.Context) {
 		return
 	}
 
-	var bus models.Bus
+	var bus domain.Bus
 	if err := c.BindJSON(&bus); err != nil {
 		c.JSON(http.StatusInternalServerError, "internal server error")
 		return
 	}
-	resBus, err := models.UpdatePosByID(busID, bus)
+	resBus, err := models.InsertLogByID(controller.DB, busID, &bus)
 	c.JSON(http.StatusOK, resBus)
 }
