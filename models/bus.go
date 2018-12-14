@@ -59,10 +59,12 @@ func GetAll(db *sqlx.DB) ([]*domain.Bus, error) {
 	return bs, nil
 }
 
-func InsertLogByID(db *sqlx.DB, id int64, bus *domain.Bus) (*CongestionLog, error) {
+func InsertLog(db *sqlx.DB, bus *domain.Bus) (*CongestionLog, error) {
+	pos := calcPosition(bus.Longitude, bus.Latitude)
+
 	// where id = ?して、緯度経度、posをupdate
-	res, err := db.Exec(`INSERT INTO congestion_log(latitude, longitude, congestion, bus_id) VALUES (?, ?, ?, ?)`,
-		bus.Latitude, bus.Longitude, bus.Congestion, bus.BusID)
+	res, err := db.Exec(`INSERT INTO congestion_log(latitude, longitude, congestion, position, bus_id) VALUES (?, ?, ?, ?, ?)`,
+		bus.Latitude, bus.Longitude, bus.Congestion, pos, bus.BusID)
 	if err != nil {
 		return nil, err
 	}

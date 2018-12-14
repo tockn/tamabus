@@ -3,6 +3,8 @@ package server
 import (
 	"errors"
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/tockn/tamabus/controllers"
 
@@ -49,9 +51,10 @@ func (s *Server) Setup(dbConfPath, env string) error {
 }
 
 func (s *Server) setRouter() {
-	busController := controllers.BusController{s.dbx}
+	logger := log.New(os.Stdout, "", log.LstdFlags|log.Lshortfile)
+	busController := controllers.BusController{DB: s.dbx, Logger: logger}
 	s.engine.GET("/api/bus", busController.GetBuses)
-	s.engine.POST("/api/bus/:id", busController.PostGPS)
+	s.engine.POST("/api/bus", busController.PostGPS)
 }
 
 func (s *Server) Run(port string) {

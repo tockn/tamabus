@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/tockn/tamabus/domain"
@@ -12,12 +13,14 @@ import (
 )
 
 type BusController struct {
-	DB *sqlx.DB
+	DB     *sqlx.DB
+	Logger *log.Logger
 }
 
 func (controller *BusController) GetBuses(c *gin.Context) {
 	buses, err := models.GetAll(controller.DB)
 	if err != nil {
+		controller.Logger.Println(err)
 		c.JSON(http.StatusInternalServerError, "internal server error")
 		return
 	}
@@ -26,17 +29,17 @@ func (controller *BusController) GetBuses(c *gin.Context) {
 
 func (controller *BusController) PostGPS(c *gin.Context) {
 
-	busID, err := paramID(c, "id")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, "internal server error")
-		return
-	}
-
-	var bus domain.Bus
-	if err := c.BindJSON(&bus); err != nil {
+	var dbus domain.Bus
+	if err := c.BindJSON(&dbus); err != nil {
+		controller.Logger.Println(err)
 		c.JSON(http.StatusInternalServerError, "internal server error")
 		return
 	}
-	resBus, err := models.InsertLogByID(controller.DB, busID, &bus)
+	resBus, err := models.InsertLog(controller.DB, &dbus)
+	if err != nil {
+		controller.Logger.Println(err)
+		c.JSON(http.StatusInternalServerError, "internal server error")
+		return
+	}
 	c.JSON(http.StatusOK, resBus)
 }
