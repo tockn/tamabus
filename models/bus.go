@@ -103,7 +103,6 @@ func (b *BusImage) Insert(db *sqlx.DB) error {
 	return nil
 }
 
-func TruncateImage(db *sqlx.DB) (err error) {
-	_, err := db.Exec(`TRUNCATE TABLE images`)
-	return
+func TruncateImage(db *sqlx.DB){
+	db.Exec(`TRUNCATE TABLE images`)
 }

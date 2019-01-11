@@ -3,8 +3,10 @@ package server
 import (
 	"errors"
 	"fmt"
+	"github.com/tockn/tamabus/models"
 	"log"
 	"os"
+	"time"
 
 	"github.com/tockn/tamabus/controllers"
 
@@ -59,5 +61,13 @@ func (s *Server) setRouter() {
 }
 
 func (s *Server) Run(port string) error {
+	go truncater(s.dbx)
 	return s.engine.Run(":" + port)
+}
+
+func truncater (db *sqlx.DB) {
+	for range time.Tick(24 * time.Hour) {
+		log.Println("Truncate images!")
+		models.TruncateImage(db)
+	}
 }
