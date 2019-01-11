@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	"encoding/base64"
+	"github.com/tockn/tamabus/domain"
 	"log"
 	"net/http"
-
-	"github.com/tockn/tamabus/domain"
 
 	"github.com/jmoiron/sqlx"
 
@@ -28,7 +28,6 @@ func (controller *BusController) GetBuses(c *gin.Context) {
 }
 
 func (controller *BusController) PostGPS(c *gin.Context) {
-
 	var dbus domain.Bus
 	if err := c.BindJSON(&dbus); err != nil {
 		controller.Logger.Println(err)
@@ -42,4 +41,32 @@ func (controller *BusController) PostGPS(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, resBus)
+}
+
+func (controller *BusController) PostImage(c *gin.Context) {
+	var img domain.BusImage
+	if err := c.BindJSON(&img); err != nil {
+		controller.Logger.Println(err)
+		c.JSON(http.StatusInternalServerError, "internal server error")
+		return
+	}
+
+	bin, err := base64.StdEncoding.DecodeString(img.Base64)
+	if err != nil {
+		controller.Logger.Println(err)
+		c.JSON(http.StatusBadRequest, "could not decode from base64")
+		return
+	}
+
+	mi := models.BusImage{
+		BusID: img.BusID,
+		Body: string(bin),
+	}
+
+	err = mi.Insert(controller.DB)
+	if err != nil {
+		controller.Logger.Println(err)
+		c.JSON(http.StatusInternalServerError, "internal server error")
+		return
+	}
 }

@@ -88,3 +88,22 @@ func InsertLog(db *sqlx.DB, bus *domain.Bus) (*CongestionLog, error) {
 func calcPosition(long float64, lati float64) int64 {
 	return 1
 }
+
+type BusImage struct {
+	BusID int64
+	Body  string
+}
+
+func (b *BusImage) Insert(db *sqlx.DB) error {
+	_, err := db.Exec(`INSERT INTO images(body, bus_id) VALUES (?, ?)`,
+		b.Body, b.BusID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func TruncateImage(db *sqlx.DB) (err error) {
+	_, err := db.Exec(`TRUNCATE TABLE images`)
+	return
+}

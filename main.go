@@ -20,6 +20,7 @@ func main() {
 	if err := s.Setup("dbconfig.yml", env); err != nil {
 		log.Fatalf("server setup error. %s", err)
 	}
-	s.Run(port)
-
+	if err := s.Run(port); err != nil {
+		log.Fatal(err)
+	}
 }

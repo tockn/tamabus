@@ -8,3 +8,8 @@ type Bus struct {
 	Longitude  float64 `json:"longitude"`
 	Latitude   float64 `json:"latitude"`
 }
+
+type BusImage struct {
+	BusID int64 `json:"bus_id"`
+	Base64 string `json:"base64"`
+}

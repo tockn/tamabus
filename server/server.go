@@ -55,8 +55,9 @@ func (s *Server) setRouter() {
 	busController := controllers.BusController{DB: s.dbx, Logger: logger}
 	s.engine.GET("/api/bus", busController.GetBuses)
 	s.engine.POST("/api/bus", busController.PostGPS)
+	s.engine.POST("/api/bus/image", busController.PostImage)
 }
 
-func (s *Server) Run(port string) {
-	s.engine.Run(":" + port)
+func (s *Server) Run(port string) error {
+	return s.engine.Run(":" + port)
 }
