@@ -16,3 +16,4 @@ $ make deps
 $ make run
 ```
 
+[API仕様書](https://hackmd.io/_GxgcrbhRE-xG04dhIKDjQ?both)
