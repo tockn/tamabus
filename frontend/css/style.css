@@ -1,0 +1,251 @@
+@charset "UTF-8";
+
+/* =======================================================
+ *   ページ全体
+ * ======================================================= */
+
+img { border: 0; }
+
+body, nav, section, header, main, footer, h1, h2, p, ul, li, dl, dt, dd, div {
+  margin: 0;
+  padding: 0;
+}
+
+/* =======================================================
+ *   ヘッダー
+ * ======================================================= */
+
+header {
+  text-align: center;
+  width:100%;
+}
+
+@media only screen and(max-device-width:480px) {
+/*スマートフォンのみ以下を適用*/
+  max-width: 100%;
+}
+
+header #logo {
+  margin: 50px 0 40px;
+  text-align: center;
+}
+
+header #logo img {
+  vertical-align: bottom;
+}
+
+header nav li {
+  display: block;
+}
+
+header nav li {
+  margin: 0 0 1.3em;
+  text-align: center;
+}
+
+header nav li a {
+  text-decoration: none;
+  font-size: 15px;
+  color: black;
+}
+
+header nav li.current a {
+  font-weight: bold;
+  color: #568fcc;
+}
+
+header nav + p,
+header nav + h1 {
+  margin: 50px 0 1.5rem;
+}
+
+header nav + p img {
+  margin: 50px 0 40px;
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  text-align: center;
+}
+
+header nav + h1 {
+  padding: 1rem 0;
+  text-align: center;
+  font-size: 1.5rem;
+  color: white;
+  background: #568fcc;
+}
+
+.mb2{
+  margin-bottom: 2em;
+}
+
+/* =======================================================
+ *   メインコンテンツ
+ * ======================================================= */
+
+main {
+  margin: 0 25px;
+}
+
+main p,
+main dl {
+  margin: 1rem 0;
+  font-size: 1rem;
+}
+
+#home main h2 {
+  margin-top: 1.5rem;
+  font-size: 1.32rem;
+  color: #568fcc;
+}
+
+#home main section:nth-child(n+2) {
+  margin-top: 2rem;
+  border-top: 1px solid #568fcc;
+}
+
+#home main #news a {
+  text-decoration: none;
+  color: #568fcc;
+}
+
+#home main #news dt {
+  clear: left;
+  float: left;
+  width: 11.5em;
+}
+
+#congestion main img {
+  width: 100%;
+}
+
+#timetable main #division li,
+#timetable main #division li a {
+  display: block;
+  text-align: center;
+}
+
+#timetable main #division li {
+  width: 100%;
+}
+
+#timetable main #division li:nth-child(1) {
+  /* float: left; */
+  text-align: center;
+}
+
+#timetable main #division li:nth-child(2) {
+  /* float: right; */
+  text-align: center;
+}
+
+#timetable main #division li:nth-child(3) {
+  /* float: left; */
+  text-align: center;
+}
+
+#timetable main #division li:nth-child(4) {
+  /* float: right; */
+  text-align: center;
+}
+
+#timetable main #division li img {
+  width: 100%;
+}
+
+#timetable main #division li a {
+  margin-top: 0.6em;
+  padding: 0.6em;
+  border: 2px solid #568fcc;
+  border-radius: 1.6em;
+  line-height: 1.0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: #568fcc;
+}
+
+#access main iframe {
+  width: 100%;
+}
+
+#contact main address {
+  margin-top: 50px;
+  text-align: center;
+  font-style: normal;
+}
+
+#contact main address img {
+  width: 100%;
+  max-width: 430px;
+}
+
+#contact main form {
+  margin-top: 2rem;
+}
+
+#contact main form * {
+  font-size: 1rem;
+}
+
+#contact main form input[type="text"],
+#contact main form textarea {
+  border: 1px solid #999;
+  box-shadow: inset 3px 3px 10px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 620px;
+}
+
+#contact main form input[type="text"] {
+  height: 1.6rem;
+  max-width: 310px;
+}
+
+#contact main form input[type="submit"] {
+  border: 2px solid #568fcc;
+  border-radius: 8px;
+  width: 8rem;
+  height: 2.6rem;
+  font-weight: bold;
+  color: #ffffff;
+  background: #568fcc;
+}
+
+#contact main form p:last-child {
+  text-align: center;
+}
+
+/* =======================================================
+ *   フッター
+ * ======================================================= */
+
+footer {
+  text-align: center;
+}
+
+footer p {
+  margin: 40px 0;
+}
+
+footer #back2top {
+  padding: 0.6rem 0;
+  text-transform: uppercase;
+  font-size: 1rem;
+  color: white;
+  background: #568fcc;
+}
+
+footer #back2top a {
+  text-decoration: none;
+  color: white;
+}
+
+/* =======================================================
+ *   スペシャル
+ * ======================================================= */
+
+#timetable main #division:after {
+    content: "";
+    display: block;
+    clear: both;
+}
