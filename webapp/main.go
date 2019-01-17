@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/tockn/tamabus/server"
+	"github.com/tockn/tamabus/webapp/server"
 )
 
 func main() {

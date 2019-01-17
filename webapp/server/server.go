@@ -3,12 +3,12 @@ package server
 import (
 	"errors"
 	"fmt"
-	"github.com/tockn/tamabus/models"
+	"github.com/tockn/tamabus/webapp/models"
 	"log"
 	"os"
 	"time"
 
-	"github.com/tockn/tamabus/controllers"
+	"github.com/tockn/tamabus/webapp/controllers"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -55,15 +55,15 @@ func (s *Server) Setup(dbConfPath, env string) error {
 func (s *Server) setRouter() {
 	logger := log.New(os.Stdout, "", log.LstdFlags|log.Lshortfile)
 
-	s.engine.StaticFile( "/home.html", "frontend/html/home.html")
-	s.engine.StaticFile( "/access.html", "frontend/html/access.html")
-	s.engine.StaticFile( "/congestion.html", "frontend/html/congestion.html")
-	s.engine.StaticFile( "/contact.html", "frontend/html/contact.html")
-	s.engine.StaticFile( "/timetable.html", "frontend/html/timetable.html")
+	s.engine.StaticFile( "/home.html", "../frontend/html/home.html")
+	s.engine.StaticFile( "/access.html", "../frontend/html/access.html")
+	s.engine.StaticFile( "/congestion.html", "../frontend/html/congestion.html")
+	s.engine.StaticFile( "/contact.html", "../frontend/html/contact.html")
+	s.engine.StaticFile( "/timetable.html", "../frontend/html/timetable.html")
 
-	s.engine.Static("/js", "frontend/js")
-	s.engine.Static("/images", "frontend/images")
-	s.engine.Static("/css", "frontend/css")
+	s.engine.Static("/js", "../frontend/js")
+	s.engine.Static("/images", "../frontend/images")
+	s.engine.Static("/css", "../frontend/css")
 
 	busController := controllers.BusController{DB: s.dbx, Logger: logger}
 	s.engine.GET("/api/bus", busController.GetBuses)

@@ -2,14 +2,14 @@ package controllers
 
 import (
 	"encoding/base64"
-	"github.com/tockn/tamabus/domain"
+	"github.com/tockn/tamabus/webapp/domain"
 	"log"
 	"net/http"
 
 	"github.com/jmoiron/sqlx"
 
 	"github.com/gin-gonic/gin"
-	"github.com/tockn/tamabus/models"
+	"github.com/tockn/tamabus/webapp/models"
 )
 
 type BusController struct {

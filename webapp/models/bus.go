@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/tockn/tamabus/domain"
+	"github.com/tockn/tamabus/webapp/domain"
 )
 
 type Bus struct {
