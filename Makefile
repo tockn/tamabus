@@ -1,8 +1,15 @@
+.PHONY: run webapp batch
+
 mysql:
 	mysql -u root --protocol=tcp -D tamabus -p
 
-run:
-	go run webapp/main.go
+run: webapp batch
+
+webapp:
+	go run webapp/main.go & python3 batch/main.py
+
+batch:
+	python3 batch/main.py
 
 test:
 	go test -v ./...
