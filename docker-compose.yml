@@ -11,3 +11,9 @@ services:
       MYSQL_ROOT_PASSWORD: password
     ports:
       - 3306:3306
+  congestion-calculator:
+    build:
+      context: ./congestionCalculator
+      dockerfile: Dockerfile
+    volumes:
+      - ./congestionCalculator:/home

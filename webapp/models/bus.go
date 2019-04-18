@@ -20,23 +20,27 @@ type CongestionLog struct {
 
 func GetAll(db *sqlx.DB) ([]*domain.Bus, error) {
 	var ids []int64
-	if err := db.Select(&ids, `SELECT id FROM buses`); err != nil {
+	if err := db.Select(&ids, `
+SELECT
+	id
+FROM
+	buses`); err != nil {
 		return nil, err
 	}
 	var logs []*CongestionLog
 	for _, id := range ids {
 		var lo []*CongestionLog
 		err := db.Select(&lo, `
-			SELECT
-				id, latitude, longitude, congestion, bus_id
-			FROM
-				congestion_log
-		  	WHERE
-		  		bus_id = ?
-		  	ORDER BY
-		  		created_at
-		  	DESC
-		  	LIMIT 1`, id)
+SELECT
+	id, latitude, longitude, congestion, bus_id
+FROM
+	congestion_log
+WHERE
+	bus_id = ?
+ORDER BY
+	created_at
+DESC
+	LIMIT 1`, id)
 		if err != nil {
 			return nil, err
 		}
@@ -66,7 +70,17 @@ func InsertLog(db *sqlx.DB, bus *domain.Bus) (*CongestionLog, error) {
 	pos := calcPosition(bus.Longitude, bus.Latitude)
 
 	// where id = ?して、緯度経度、posをupdate
-	res, err := db.Exec(`INSERT INTO congestion_log(latitude, longitude, congestion, position, bus_id) VALUES (?, ?, ?, ?, ?)`,
+	res, err := db.Exec(`
+INSERT INTO 
+	congestion_log(
+		latitude, 
+		longitude, 
+		congestion, 
+		position, 
+		bus_id
+	) 
+VALUES
+	(?, ?, ?, ?, ?)`,
 		bus.Latitude, bus.Longitude, bus.Congestion, pos, bus.BusID)
 	if err != nil {
 		return nil, err
@@ -91,18 +105,23 @@ func calcPosition(long float64, lati float64) int64 {
 
 type BusImage struct {
 	BusID int64
-	Body  string
+	Path  string
 }
 
 func (b *BusImage) Insert(db *sqlx.DB) error {
-	_, err := db.Exec(`INSERT INTO images(body, bus_id) VALUES (?, ?)`,
-		b.Body, b.BusID)
+	_, err := db.Exec(`
+INSERT INTO
+	images(
+		path, bus_id
+	)
+VALUES
+	(?, ?)`,
+		b.Path, b.BusID)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func TruncateImage(db *sqlx.DB){
-	db.Exec(`TRUNCATE TABLE images`)
+func TruncateImage(db *sqlx.DB) {
 }

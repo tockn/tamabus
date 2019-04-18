@@ -5,8 +5,8 @@ from keras.backend.tensorflow_backend import set_session
 from keras.models import Model
 from keras.preprocessing import image
 import numpy as np
-from scipy.misc import imread
 import tensorflow as tf
+from imageio import imread
 
 from ssd import SSD300
 from ssd_utils import BBoxUtility
@@ -17,7 +17,10 @@ config = tf.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = 0.45
 set_session(tf.Session(config=config))
 
-voc_classes = ['Person']
+voc_classes = ['Aeroplane', 'Bicycle', 'Bird', 'Boat', 'Bottle',
+               'Bus', 'Car', 'Cat', 'Chair', 'Cow', 'Diningtable',
+               'Dog', 'Horse','Motorbike', 'Person', 'Pottedplant',
+               'Sheep', 'Sofa', 'Train', 'Tvmonitor']
 NUM_CLASSES = len(voc_classes) + 1
 
 input_shape=(700, 700, 3)
@@ -63,10 +66,17 @@ for i, img in enumerate(images):
 
     count_person = 0
     for i in range(top_conf.shape[0]):
+        xmin = int(round(top_xmin[i] * img.shape[1]))
+        ymin = int(round(top_ymin[i] * img.shape[0]))
+        xmax = int(round(top_xmax[i] * img.shape[1]))
+        ymax = int(round(top_ymax[i] * img.shape[0]))
         score = top_conf[i]
         label = int(top_label_indices[i])
         label_name = voc_classes[label - 1]
+        display_txt = '{:0.2f}, {}'.format(score, label_name)
+        display_txt = ''
         if label_name == 'Person':
+            print(score)
             count_person += 1
 
-    print(f'Number of person: {count_person}')
+    print('Number of person: {}'.format(count_person))

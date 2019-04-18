@@ -2,9 +2,13 @@ package controllers
 
 import (
 	"encoding/base64"
-	"github.com/tockn/tamabus/webapp/domain"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"time"
+
+	"github.com/tockn/tamabus/webapp/domain"
 
 	"github.com/jmoiron/sqlx"
 
@@ -51,7 +55,7 @@ func (controller *BusController) PostImage(c *gin.Context) {
 		return
 	}
 
-	bin, err := base64.StdEncoding.DecodeString(img.Base64)
+	fileName, err := decode(img.Base64, img.FileType)
 	if err != nil {
 		controller.Logger.Println(err)
 		c.JSON(http.StatusBadRequest, "could not decode from base64")
@@ -60,7 +64,7 @@ func (controller *BusController) PostImage(c *gin.Context) {
 
 	mi := models.BusImage{
 		BusID: img.BusID,
-		Body: string(bin),
+		Path:  string(fileName),
 	}
 
 	err = mi.Insert(controller.DB)
@@ -69,4 +73,18 @@ func (controller *BusController) PostImage(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, "internal server error")
 		return
 	}
+}
+
+func decode(body, fileType string) (string, error) {
+	data, err := base64.StdEncoding.DecodeString(body)
+	if err != nil {
+		return "", err
+	}
+
+	fileName := fmt.Sprintf("./busImages/%d.%s", time.Now().Unix(), fileType)
+	file, _ := os.Create(fileName)
+	defer file.Close()
+
+	_, err = file.Write(data)
+	return fileName, err
 }

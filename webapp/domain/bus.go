@@ -10,6 +10,7 @@ type Bus struct {
 }
 
 type BusImage struct {
-	BusID int64 `json:"bus_id"`
-	Base64 string `json:"base64"`
+	BusID    int64  `json:"bus_id"`
+	Base64   string `json:"base64"`
+	FileType string `json:"file_type"`
 }

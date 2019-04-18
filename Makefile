@@ -6,7 +6,7 @@ mysql:
 run: webapp batch
 
 webapp:
-	go run webapp/main.go & python3 batch/main.py
+	go run webapp/main.go
 
 batch:
 	python3 batch/main.py

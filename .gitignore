@@ -1,1 +1,4 @@
 .idea/
+venv/
+busImages/*
+.DS_Store
