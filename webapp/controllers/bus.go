@@ -83,7 +83,10 @@ func decode(body, fileType string) (string, error) {
 
 	fileName := fmt.Sprintf("%d.%s", time.Now().Unix(), fileType)
 	fullPath := fmt.Sprintf("./congestionCalculator/images/%s", fileName)
-	file, _ := os.Create(fullPath)
+	file, err := os.Create(fullPath)
+	if err != nil {
+		return "", err
+	}
 	defer file.Close()
 
 	_, err = file.Write(data)
