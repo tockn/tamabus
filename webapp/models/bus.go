@@ -36,7 +36,7 @@ SELECT
 FROM
 	congestion_log
 WHERE
-	bus_id = ?
+	bus_id = ? AND complete = 1
 ORDER BY
 	created_at
 DESC

@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS `congestion_log` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `bus_id` INT NOT NULL,
   `position` INT NOT NULL,
+  `complete` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `congestion_log_bus_id_idx` (`bus_id` ASC),
   CONSTRAINT `congestion_log_bus_id`
@@ -62,6 +63,5 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
 
 -- +migrate Down

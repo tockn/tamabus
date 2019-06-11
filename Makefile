@@ -9,7 +9,7 @@ webapp:
 	go run webapp/main.go
 
 batch:
-	python3 batch/main.py
+	python batch/main.py
 
 test:
 	go test -v ./...

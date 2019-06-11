@@ -38,12 +38,9 @@ images.append(imread(img_path))
 inputs.append(img.copy())
 inputs = preprocess_input(np.array(inputs))
 
-preds = model.predict(inputs, batch_size=1, verbose=1)
+preds = model.predict(inputs, batch_size=1, verbose=0)
 
 results = bbox_util.detection_out(preds)
-
-a = model.predict(inputs, batch_size=1)
-b = bbox_util.detection_out(preds)
 
 for i, img in enumerate(images):
     # Parse the outputs.
