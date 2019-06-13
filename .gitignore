@@ -2,3 +2,4 @@
 venv/
 busImages/*
 .DS_Store
+congestionCalculator/images/*
