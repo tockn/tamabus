@@ -1,6 +1,8 @@
 package models
 
 import (
+	"database/sql"
+	"fmt"
 	"math/rand"
 	"time"
 
@@ -108,20 +110,80 @@ func calcPosition(long float64, lati float64) int64 {
 }
 
 type BusImage struct {
-	BusID int64
-	Path  string
+	BusID  int64
+	Path   string
+	Base64 string
 }
 
 func (b *BusImage) Insert(db *sqlx.DB) error {
 	_, err := db.Exec(`
 INSERT INTO
 	images(
-		path, bus_id
+		base64, bus_id
 	)
 VALUES
 	(?, ?)`,
-		b.Path, b.BusID)
+		b.Base64, b.BusID)
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetAllBusImages(db *sqlx.DB) ([]*domain.BusImage, error) {
+	var ids []int64
+	if err := db.Select(&ids, `
+SELECT
+	id
+FROM
+	buses`); err != nil {
+		return nil, err
+	}
+
+	bis := make([]*BusImage, 0, len(ids))
+	for _, id := range ids {
+		bi := &BusImage{}
+		if err := db.DB.QueryRow(`
+SELECT
+	bus_id, base64
+FROM 
+	images
+WHERE
+	bus_id = ?
+ORDER BY
+	created_at DESC;
+`, id).Scan(&bi.BusID, &bi.Base64); err != nil {
+			if err == sql.ErrNoRows {
+				continue
+			}
+			return nil, err
+		}
+		fmt.Println(bi)
+		bis = append(bis, bi)
+	}
+
+	dbis := make([]*domain.BusImage, 0, len(bis))
+	for _, b := range bis {
+		dbi := &domain.BusImage{
+			BusID:  b.BusID,
+			Base64: b.Base64,
+		}
+		dbis = append(dbis, dbi)
+	}
+	return dbis, nil
+}
+
+func (c *CongestionLog) UpdateCongestion(db *sqlx.DB) error {
+	if _, err := db.Exec(`
+update
+	congestion_log
+set
+	congestion = ?, 
+	complete = 1 
+where 
+	bus_id = ? 
+  and 
+  	complete = 0`, c.Congestion, c.BusID); err != nil {
 		return err
 	}
 	return nil

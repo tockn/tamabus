@@ -55,24 +55,52 @@ func (controller *BusController) PostImage(c *gin.Context) {
 		return
 	}
 
-	fileName, err := decode(img.Base64, img.FileType)
-	if err != nil {
-		controller.Logger.Println(err)
-		c.JSON(http.StatusBadRequest, "could not decode from base64")
-		return
-	}
+	//fileName, err := decode(img.Base64, img.FileType)
+	//if err != nil {
+	//	controller.Logger.Println(err)
+	//	c.JSON(http.StatusBadRequest, "could not decode from base64")
+	//	return
+	//}
 
 	mi := models.BusImage{
-		BusID: img.BusID,
-		Path:  string(fileName),
+		BusID:  img.BusID,
+		Base64: img.Base64,
 	}
 
-	err = mi.Insert(controller.DB)
+	if err := mi.Insert(controller.DB); err != nil {
+		controller.Logger.Println(err)
+		c.JSON(http.StatusInternalServerError, "internal server error")
+		return
+	}
+}
+
+func (controller *BusController) GetImages(c *gin.Context) {
+	bis, err := models.GetAllBusImages(controller.DB)
 	if err != nil {
 		controller.Logger.Println(err)
 		c.JSON(http.StatusInternalServerError, "internal server error")
 		return
 	}
+	c.JSON(http.StatusOK, bis)
+}
+
+func (controller *BusController) UpdateCongestion(c *gin.Context) {
+	var b domain.Bus
+	if err := c.Bind(&b); err != nil {
+		controller.Logger.Println(err)
+		c.JSON(http.StatusInternalServerError, "internal")
+		return
+	}
+	cl := &models.CongestionLog{
+		Congestion: b.Congestion,
+		BusID:      b.BusID,
+	}
+	if err := cl.UpdateCongestion(controller.DB); err != nil {
+		controller.Logger.Println(err)
+		c.JSON(http.StatusInternalServerError, "internal")
+		return
+	}
+	c.JSON(http.StatusNoContent, nil)
 }
 
 func decode(body, fileType string) (string, error) {

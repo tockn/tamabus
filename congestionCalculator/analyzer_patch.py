@@ -1,4 +1,7 @@
 import MySQLdb
+import glob
+import json
+import urllib.request
 import schedule
 from datetime import datetime
 import time
@@ -15,28 +18,46 @@ from imageio import imread
 from ssd import SSD300
 from ssd_utils import BBoxUtility
 
-def getImages (cur):
-    sql = "select id from buses"
-    cur.execute(sql)
-    ids = []
-    for row in cur.fetchall():
-        ids.append(row[0])
+url = "http://localhost:8080/api/bus"
 
+def getImages ():
+    # sql = "select id from buses"
+    # cur.execute(sql)
+    # ids = []
+    # for row in cur.fetchall():
+    #     ids.append(row[0])
+    #
+    # imageData = []
+    # for id in ids:
+    #     sql = "select path, bus_id from images where bus_id = %s order by created_at desc limit 1"
+    #     cur.execute(sql, (id,))
+    #     res = cur.fetchall()
+    #     if len(res) != 1: continue
+    #     imageData.append({'fileName': res[0][0], 'busId': res[0][1]})
+    # return imageData
+    fileNames = glob.glob("*.png")
+    print("==============================")
+    print("==============================")
+    print("==============================")
+    print("==============================")
+    print(fileNames)
+    print("==============================")
+    print("==============================")
+    print("==============================")
     imageData = []
-    for id in ids:
-        sql = "select path, bus_id from images where bus_id = %s order by created_at desc limit 1"
-        cur.execute(sql, (id,))
-        res = cur.fetchall()
-        if len(res) != 1: continue
-        imageData.append({'fileName': res[0][0], 'busId': res[0][1]})
+    for name in fileNames:
+        id = name.split('.')[0]
+        imageData.append({'fileName': name, 'busId': id})
+    print(imageData)
     return imageData
 
-def predict(cur, model, imageData):
+
+def predict(model, imageData):
     inputs = []
     images = []
 
     for data in imageData:
-        img_path = '/home/images/' + data['fileName']
+        img_path = '/home/' + data['fileName']
         img = image.load_img(img_path, target_size=(700, 700))
         img = image.img_to_array(img)
         images.append(imread(img_path))
@@ -83,8 +104,11 @@ def predict(cur, model, imageData):
 
     print("{}: {}", datetime.now().strftime("%Y/%m/%d %H:%M:%S"), imageData)
     for data in imageData:
-        sql = "update congestion_log set congestion = %s, complete = 1 where bus_id = %s and complete = 0"
-        cur.execute(sql, (data['congestion'], data['busId']))
+        # sql = "update congestion_log set congestion = %s, complete = 1 where bus_id = %s and complete = 0"
+        # cur.execute(sql, (data['congestion'], data['busId']))
+        print(data)
+        req = urllib.request.Request(url, json.dumps(data).encode(), method='PUT')
+        urllib.request.urlopen(req)
 
 np.set_printoptions(suppress=True)
 
@@ -104,18 +128,12 @@ model = SSD300(input_shape, num_classes=NUM_CLASSES)
 model.load_weights('weights_SSD300.hdf5', by_name=True)
 bbox_util = BBoxUtility(NUM_CLASSES)
 
-conn = MySQLdb.connect(
-    user='root',
-    passwd='password',
-    host='db',
-    db='tamabus',
-    autocommit=True
-)
-
 def job():
-    cur = conn.cursor()
-    imageData = getImages(cur)
-    predict(cur, model, imageData)
+    imageData = getImages()
+    print(imageData)
+    predict(model, imageData)
+
+job()
 
 schedule.every(9).seconds.do(job)
 

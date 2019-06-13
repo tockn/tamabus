@@ -25,7 +25,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `images` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `path` VARCHAR(512) NOT NULL,
+  `path` VARCHAR(512),
+  `base64` BLOB,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `bus_id` INT NOT NULL,
   PRIMARY KEY (`id`),

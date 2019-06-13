@@ -3,11 +3,12 @@ package server
 import (
 	"errors"
 	"fmt"
-	"github.com/tockn/tamabus/webapp/models"
+	"io"
 	"log"
 	"os"
 	"time"
-	"io"
+
+	"github.com/tockn/tamabus/webapp/models"
 
 	"github.com/tockn/tamabus/webapp/controllers"
 
@@ -50,16 +51,15 @@ func (s *Server) Setup(dbConfPath, env string) error {
 
 	s.setRouter()
 
+	logFile, err := os.OpenFile("./twitro.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 
-        logFile, err := os.OpenFile("./twitro.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if err != nil {
+		panic(err)
+	}
 
-        if err != nil {
-                panic(err)
-        }
+	log.SetOutput(logFile)
 
-        log.SetOutput(logFile)
-
-        gin.DefaultWriter = io.MultiWriter(logFile)
+	gin.DefaultWriter = io.MultiWriter(logFile)
 
 	return nil
 }
@@ -67,11 +67,11 @@ func (s *Server) Setup(dbConfPath, env string) error {
 func (s *Server) setRouter() {
 	logger := log.New(os.Stdout, "", log.LstdFlags|log.Lshortfile)
 
-	s.engine.StaticFile( "/home.html", "../frontend/html/home.html")
-	s.engine.StaticFile( "/access.html", "../frontend/html/access.html")
-	s.engine.StaticFile( "/congestion.html", "../frontend/html/congestion.html")
-	s.engine.StaticFile( "/contact.html", "../frontend/html/contact.html")
-	s.engine.StaticFile( "/timetable.html", "../frontend/html/timetable.html")
+	s.engine.StaticFile("/home.html", "../frontend/html/home.html")
+	s.engine.StaticFile("/access.html", "../frontend/html/access.html")
+	s.engine.StaticFile("/congestion.html", "../frontend/html/congestion.html")
+	s.engine.StaticFile("/contact.html", "../frontend/html/contact.html")
+	s.engine.StaticFile("/timetable.html", "../frontend/html/timetable.html")
 
 	s.engine.Static("/js", "../frontend/js")
 	s.engine.Static("/images", "../frontend/images")
@@ -80,6 +80,8 @@ func (s *Server) setRouter() {
 	busController := controllers.BusController{DB: s.dbx, Logger: logger}
 	s.engine.GET("/api/bus", busController.GetBuses)
 	s.engine.POST("/api/bus", busController.PostGPS)
+	s.engine.PUT("/api/bus", busController.UpdateCongestion)
+	s.engine.GET("api/bus/image", busController.GetImages)
 	s.engine.POST("/api/bus/image", busController.PostImage)
 
 }
@@ -89,7 +91,7 @@ func (s *Server) Run(port string) error {
 	return s.engine.Run(":" + port)
 }
 
-func truncater (db *sqlx.DB) {
+func truncater(db *sqlx.DB) {
 	for range time.Tick(24 * time.Hour) {
 		log.Println("Truncate images!")
 		models.TruncateImage(db)
