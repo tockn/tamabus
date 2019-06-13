@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"time"
+	"io"
 
 	"github.com/tockn/tamabus/webapp/controllers"
 
@@ -49,21 +50,32 @@ func (s *Server) Setup(dbConfPath, env string) error {
 
 	s.setRouter()
 
+
+        logFile, err := os.OpenFile("./twitro.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+
+        if err != nil {
+                panic(err)
+        }
+
+        log.SetOutput(logFile)
+
+        gin.DefaultWriter = io.MultiWriter(logFile)
+
 	return nil
 }
 
 func (s *Server) setRouter() {
 	logger := log.New(os.Stdout, "", log.LstdFlags|log.Lshortfile)
 
-	s.engine.StaticFile( "/home.html", "./frontend/html/home.html")
-	s.engine.StaticFile( "/access.html", "./frontend/html/access.html")
-	s.engine.StaticFile( "/congestion.html", "./frontend/html/congestion.html")
-	s.engine.StaticFile( "/contact.html", "./frontend/html/contact.html")
-	s.engine.StaticFile( "/timetable.html", "./frontend/html/timetable.html")
+	s.engine.StaticFile( "/home.html", "../frontend/html/home.html")
+	s.engine.StaticFile( "/access.html", "../frontend/html/access.html")
+	s.engine.StaticFile( "/congestion.html", "../frontend/html/congestion.html")
+	s.engine.StaticFile( "/contact.html", "../frontend/html/contact.html")
+	s.engine.StaticFile( "/timetable.html", "../frontend/html/timetable.html")
 
-	s.engine.Static("/js", "./frontend/js")
-	s.engine.Static("/images", "./frontend/images")
-	s.engine.Static("/css", "./frontend/css")
+	s.engine.Static("/js", "../frontend/js")
+	s.engine.Static("/images", "../frontend/images")
+	s.engine.Static("/css", "../frontend/css")
 
 	busController := controllers.BusController{DB: s.dbx, Logger: logger}
 	s.engine.GET("/api/bus", busController.GetBuses)

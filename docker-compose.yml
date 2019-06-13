@@ -13,13 +13,13 @@ services:
       - 3306:3306
     expose:
       - "3306"
-#  person-counter:
-#    image: tockn/tamabus-person-counter
-#    volumes:
-#      - ./congestionCalculator:/home
-#    tty: true
-#    depends_on:
-#      - db
+  #person-counter:
+   # image: tockn/tamabus-person-counter
+    #volumes:
+    #  - ./congestionCalculator:/home
+   # tty: true
+   # depends_on:
+   #   - db
 #  web:
 #    build:
 #      context: ./webapp

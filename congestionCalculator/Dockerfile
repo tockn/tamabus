@@ -1,6 +1,7 @@
 FROM yoanlin/opencv-python3:jessie
 LABEL maintainer="tockn <s.taku.inthebox@gmail.com>"
 
+RUN pip install --upgrade pip
 RUN pip install cython \
  && pip install six \
  && pip install Pillow \

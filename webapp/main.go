@@ -16,6 +16,7 @@ func main() {
 	flag.StringVar(&env, "environment", "development", "environment")
 	flag.StringVar(&dbconfigPath, "dbconfig", "../dbconfig.yml", "dbconfig")
 
+
 	flag.Parse()
 
 	s := server.NewServer()

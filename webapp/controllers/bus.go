@@ -81,8 +81,8 @@ func decode(body, fileType string) (string, error) {
 		return "", err
 	}
 
-	fileName := fmt.Sprintf("%d.%s", time.Now().Unix(), fileType)
-	fullPath := fmt.Sprintf("./congestionCalculator/images/%s", fileName)
+	fileName := fmt.Sprintf("%d.png", time.Now().Unix())
+	fullPath := fmt.Sprintf("../congestionCalculator/images/%s", fileName)
 	file, err := os.Create(fullPath)
 	if err != nil {
 		return "", err
