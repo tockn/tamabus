@@ -1,6 +1,9 @@
 package models
 
 import (
+	"math/rand"
+	"time"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/tockn/tamabus/webapp/domain"
 )
@@ -100,7 +103,8 @@ VALUES
 }
 
 func calcPosition(long float64, lati float64) int64 {
-	return 1
+	rand.Seed(time.Now().UnixNano())
+	return int64(rand.Intn(6))
 }
 
 type BusImage struct {
