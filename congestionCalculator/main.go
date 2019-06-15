@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const URL = "http://localhost:8080/api/bus/image"
+const URL = "http://3.113.5.185/api/bus/image"
 
 type BusImage struct {
 	BusID  int64  `json:"bus_id"`
@@ -42,7 +42,11 @@ func main() {
 		}
 
 		for _, b := range bs {
-			_, _ = decode(b.Base64, b.BusID)
+			_, err := decode(b.Base64, b.BusID)
+			if err != nil {
+				log.Println(err)
+			}
+			log.Println("busID:", b.BusID)
 		}
 		time.Sleep(8 * time.Second)
 	}
@@ -54,7 +58,7 @@ func decode(body string, busID int64) (string, error) {
 		return "", err
 	}
 
-	fullPath := fmt.Sprintf("./images/%d.png", busID)
+	fullPath := fmt.Sprintf("./images/raw/%d.png", busID)
 	file, err := os.Create(fullPath)
 	if err != nil {
 		return "", err

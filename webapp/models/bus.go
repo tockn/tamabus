@@ -151,7 +151,9 @@ FROM
 WHERE
 	bus_id = ?
 ORDER BY
-	created_at DESC;
+	created_at
+	DESC
+LIMIT 1;
 `, id).Scan(&bi.BusID, &bi.Base64); err != nil {
 			if err == sql.ErrNoRows {
 				continue

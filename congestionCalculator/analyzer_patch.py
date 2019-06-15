@@ -14,11 +14,12 @@ from keras.preprocessing import image
 import numpy as np
 import tensorflow as tf
 from imageio import imread
+import matplotlib.pyplot as plt
 
 from ssd import SSD300
 from ssd_utils import BBoxUtility
 
-url = "http://localhost:8080/api/bus"
+url = "http://3.113.5.185/api/bus"
 
 def getImages ():
     # sql = "select id from buses"
@@ -35,7 +36,7 @@ def getImages ():
     #     if len(res) != 1: continue
     #     imageData.append({'fileName': res[0][0], 'busId': res[0][1]})
     # return imageData
-    fileNames = glob.glob("*.png")
+    fileNames = glob.glob("./images/raw/*.png")
     print("==============================")
     print("==============================")
     print("==============================")
@@ -48,7 +49,6 @@ def getImages ():
     for name in fileNames:
         id = name.split('.')[0]
         imageData.append({'fileName': name, 'busId': id})
-    print(imageData)
     return imageData
 
 
@@ -57,7 +57,7 @@ def predict(model, imageData):
     images = []
 
     for data in imageData:
-        img_path = '/home/' + data['fileName']
+        img_path = data['fileName']
         img = image.load_img(img_path, target_size=(700, 700))
         img = image.img_to_array(img)
         images.append(imread(img_path))
@@ -87,6 +87,11 @@ def predict(model, imageData):
         top_xmax = det_xmax[top_indices]
         top_ymax = det_ymax[top_indices]
 
+        colors = plt.cm.hsv(np.linspace(0, 1, 21)).tolist()
+
+        plt.imshow(img / 255.)
+        currentAxis = plt.gca()
+
         count_person = 0
         for i in range(top_conf.shape[0]):
             xmin = int(round(top_xmin[i] * img.shape[1]))
@@ -97,9 +102,14 @@ def predict(model, imageData):
             label = int(top_label_indices[i])
             label_name = voc_classes[label - 1]
             display_txt = '{:0.2f}, {}'.format(score, label_name)
-            display_txt = ''
-            if label_name == 'Person' and score > 0.6:
+            coords = (xmin, ymin), xmax-xmin+1, ymax-ymin+1
+            color = colors[label]
+            currentAxis.add_patch(plt.Rectangle(*coords, fill=False, edgecolor=color, linewidth=2))
+            currentAxis.text(xmin, ymin, display_txt, bbox={'facecolor':color, 'alpha':0.5})
+
+            if label_name == 'Person' and score > 0.7:
                 count_person += 1
+        plt.savefig("./images/result/result.png")
         imageData[n]['congestion'] = count_person
 
     print("{}: {}", datetime.now().strftime("%Y/%m/%d %H:%M:%S"), imageData)
@@ -127,16 +137,12 @@ model = SSD300(input_shape, num_classes=NUM_CLASSES)
 
 model.load_weights('weights_SSD300.hdf5', by_name=True)
 bbox_util = BBoxUtility(NUM_CLASSES)
+imageData = getImages()
+print(imageData)
+predict(model, imageData)
 
-def job():
-    imageData = getImages()
-    print(imageData)
-    predict(model, imageData)
+#schedule.every(9).seconds.do(job)
 
-job()
-
-schedule.every(9).seconds.do(job)
-
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+#while True:
+#    schedule.run_pending()
+#    time.sleep(1)

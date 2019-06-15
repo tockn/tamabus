@@ -19,6 +19,9 @@ services:
       context: ./congestionCalculator
       dockerfile: Dockerfile
     tty: true
+    restart: always
+    volumes:
+      - ./congestionCalculator/images:/home/images
 #  web:
 #    build:
 #      context: ./webapp

@@ -16,6 +16,7 @@ RUN apt-get install -y wget \
  && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
  && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
  && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+RUN pip install matplotlib
 ADD ./* /home/
 WORKDIR /home
 CMD ["python", "analyzer_patch.py"]
