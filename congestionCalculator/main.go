@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const URL = "http://3.113.5.185/api/bus/image"
+const URL = "http://13.231.211.87:8080/api/bus/image"
 
 type BusImage struct {
 	BusID  int64  `json:"bus_id"`
