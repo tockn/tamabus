@@ -41,6 +41,9 @@ def predict(model, imageData):
     inputs = []
     images = []
 
+    if len(imageData) == 0:
+        return
+
     for data in imageData:
         img_path = data['fileName']
         img = image.load_img(img_path, target_size=(700, 700))
