@@ -28,6 +28,10 @@ func main() {
 
 		client := new(http.Client)
 		resp, err := client.Do(req)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
 		defer resp.Body.Close()
 
 		body, err := ioutil.ReadAll(resp.Body)
