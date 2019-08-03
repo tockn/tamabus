@@ -1,23 +1,11 @@
 version: '3.1'
 
 services:
-  db:
-    image: mysql:5.6
-    container_name: tamabus-db
-    restart: always
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_DATABASE: tamabus
-      MYSQL_ROOT_PASSWORD: password
-    ports:
-      - 3306:3306
-    expose:
-      - "3306"
   person-counter:
-#    image: tockn/tamabus-person-counter
-    build:
-      context: ./congestionCalculator
-      dockerfile: Dockerfile
+    image: tockn/tamabus-person-counter
+#    build:
+#      context: ./congestionCalculator
+#      dockerfile: Dockerfile
     tty: true
     restart: always
     volumes:
