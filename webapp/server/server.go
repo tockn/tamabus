@@ -88,7 +88,7 @@ func (s *Server) setRouter() {
 
 func (s *Server) Run(port string) error {
 	go truncater(s.dbx)
-	return s.engine.Run(":" + port)
+	return s.engine.Run(":80")
 }
 
 func truncater(db *sqlx.DB) {
