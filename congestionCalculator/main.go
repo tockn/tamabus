@@ -62,7 +62,7 @@ func decode(body string, busID int64) (string, error) {
 		return "", err
 	}
 
-	fullPath := fmt.Sprintf("./images/raw/%d.png", busID)
+	fullPath := fmt.Sprintf("./images/raw/%d.png", 1) // ほんとはbusID
 	file, err := os.Create(fullPath)
 	if err != nil {
 		return "", err
