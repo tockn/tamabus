@@ -24,36 +24,36 @@ type CongestionLog struct {
 }
 
 func GetAll(db *sqlx.DB) ([]*domain.Bus, error) {
-//	var ids []int64
-//	if err := db.Select(&ids, `
-//SELECT
-//	id
-//FROM
-//	buses`); err != nil {
-//		return nil, err
-//	}
-//	var logs []*CongestionLog
-//	for _, id := range ids {
-//		var lo []*CongestionLog
-//		err := db.Select(&lo, `
-//SELECT
-//	id, latitude, longitude, congestion, bus_id
-//FROM
-//	congestion_log
-//WHERE
-//	bus_id = ? AND complete = 1
-//ORDER BY
-//	created_at
-//DESC
-//	LIMIT 1`, id)
-//		if err != nil {
-//			return nil, err
-//		}
-//		if len(lo) == 0 {
-//			continue
-//		}
-//		logs = append(logs, lo[0])
-//	}
+	//	var ids []int64
+	//	if err := db.Select(&ids, `
+	//SELECT
+	//	id
+	//FROM
+	//	buses`); err != nil {
+	//		return nil, err
+	//	}
+	//	var logs []*CongestionLog
+	//	for _, id := range ids {
+	//		var lo []*CongestionLog
+	//		err := db.Select(&lo, `
+	//SELECT
+	//	id, latitude, longitude, congestion, bus_id
+	//FROM
+	//	congestion_log
+	//WHERE
+	//	bus_id = ? AND complete = 1
+	//ORDER BY
+	//	created_at
+	//DESC
+	//	LIMIT 1`, id)
+	//		if err != nil {
+	//			return nil, err
+	//		}
+	//		if len(lo) == 0 {
+	//			continue
+	//		}
+	//		logs = append(logs, lo[0])
+	//	}
 
 	//bs := make([]*domain.Bus, len(logs))
 	//for i, c := range logs {
@@ -70,15 +70,15 @@ func GetAll(db *sqlx.DB) ([]*domain.Bus, error) {
 	//}
 
 	bs := make([]*domain.Bus, 2)
-	for i, b := range bs {
+	for i, _ := range bs {
 		rand.Seed(time.Now().UnixNano())
-		b = domain.Bus{
-			BusID: i,
-			Position: rand.Intn(6)
-			Congestion: rand.Intn(5),
-			Direction: 0,
-			Latitude: 0,
-			Longitude: 0,
+		bs[i] = &domain.Bus{
+			BusID:      int64(i),
+			Position:   int64(rand.Intn(6)),
+			Congestion: int64(rand.Intn(5)),
+			Direction:  0,
+			Latitude:   0,
+			Longitude:  0,
 		}
 	}
 	return bs, nil
