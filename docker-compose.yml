@@ -2,14 +2,11 @@ version: '3.1'
 
 services:
   person-counter:
-    image: tockn/tamabus-person-counter
-#    build:
-#      context: ./congestionCalculator
-#      dockerfile: Dockerfile
-    tty: true
-    restart: always
-    volumes:
-      - ./congestionCalculator/images:/home/images
+    build:
+      context: ./congestionCalculator
+      dockerfile: Dockerfile
+#    tty: true
+#    restart: always
 #  web:
 #    build:
 #      context: ./webapp
