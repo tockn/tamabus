@@ -2,8 +2,10 @@ package models
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"fmt"
 	"math/rand"
+	"os"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -128,16 +130,42 @@ type BusImage struct {
 	Base64 string
 }
 
-func (b *BusImage) Insert(db *sqlx.DB) error {
-	_, err := db.Exec(`
-INSERT INTO
-	images(
-		base64, bus_id
-	)
-VALUES
-	(?, ?)`,
-		b.Base64, b.BusID)
+func saveImageAsFile(b64 string) error {
+	dec, err := base64.StdEncoding.DecodeString(b64)
 	if err != nil {
+		return err
+	}
+
+	f, err := os.Create("../busImages/posted_bus.png")
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if _, err := f.Write(dec); err != nil {
+		return err
+	}
+	if err := f.Sync(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (b *BusImage) Insert(db *sqlx.DB) error {
+	/*
+		_, err := db.Exec(`
+	INSERT INTO
+		images(
+			base64, bus_id
+		)
+	VALUES
+		(?, ?)`,
+			b.Base64, b.BusID)
+		if err != nil {
+			return err
+		}
+	*/
+	if err := saveImageAsFile(b.Base64); err != nil {
 		return err
 	}
 	return nil
