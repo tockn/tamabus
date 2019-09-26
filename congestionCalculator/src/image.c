@@ -244,8 +244,10 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
         char labelstr[4096] = {0};
         int class = -1;
         for(j = 0; j < classes; ++j){
+          // if (strcmp(names[j], "person") != 0) continue;
             if (dets[i].prob[j] > thresh){
                 if (class < 0) {
+                  printf("%s\n", names[j]);
                     strcat(labelstr, names[j]);
                     class = j;
                 } else {

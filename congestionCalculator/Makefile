@@ -70,6 +70,7 @@ OBJS = $(addprefix $(OBJDIR), $(OBJ))
 DEPS = $(wildcard src/*.h) Makefile include/darknet.h
 
 all: obj backup results $(SLIB) $(ALIB) $(EXEC)
+	curl https://pjreddie.com/media/files/yolov3.weights -O
 #all: obj  results $(SLIB) $(ALIB) $(EXEC)
 
 
